@@ -27,7 +27,7 @@ class Server {
         this.app.use('/images', express.static('images'))
         this.app.set('views', './views')
         this.app.set('view engine', 'ejs')
-        this.app.set('PORT', process.env.port || 3001)
+        this.app.set('port', process.env.PORT || 3001)
     }
 
     routes() {
@@ -39,8 +39,8 @@ class Server {
     }
 
     start() {
-        this.app.listen(this.app.get('PORT'), () => {
-            console.log('Server on port', this.app.get('PORT'));
+        this.app.listen(this.app.get('port'), () => {
+            console.log('Server on port', this.app.get('port'));
         });
     }
 }
