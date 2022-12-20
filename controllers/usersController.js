@@ -1,9 +1,11 @@
 const { request, response } = require('express')
 const { Mongoose, default: mongoose } = require('mongoose')
+const getNotification  = require('../helpers/Notification')
 const fileGuard = require('../images/fileGuard')
 const Magistra = require('../models/Magistra')
 const magistra = require('../models/Magistra')
 const User = require('../models/user')
+
 
 class UserController {
     getOne(req, res) {
@@ -62,6 +64,8 @@ class UserController {
             },
             { new: true }
         )
+        doc.notification.push(getNotification('Info'))
+        await doc.save()
         res.status(200).send(doc)
     }
     async upadteOneUserBySelf(req, res) {

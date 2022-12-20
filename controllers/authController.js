@@ -3,6 +3,7 @@ const Magistra = require('../models/Magistra')
 const mongoose = require('mongoose')
 const User = require('../models/user')
 const fileGuard = require('../images/fileGuard')
+const getNotification  = require('../helpers/Notification')
 
 class AuthController {
     async login(req, res) {
@@ -26,10 +27,10 @@ class AuthController {
                                 $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ["$user", 0] }, "$$ROOT"] } }
                             },
                             { $project: { user: 0, __v: 0, username: 0, password: 0, _id: 0, owner: 0 } }
-                        ]).then(response => res.status(200).json({data: response}))
+                        ]).then(response => res.status(200).json({ data: response }))
                     } else {
                         const response = { role: 'ADMIN' }
-                        res.status(201).json({data: response})
+                        res.status(201).json({ data: response })
                     }
                 } else res.status(202).send('Mot de pass incorrect')
 
@@ -50,26 +51,24 @@ class AuthController {
             if (mag.avatar) {
                 fileGuard(mag.avatar.toString())
             }
-            Magistra.updateOne(
+            const doc = await Magistra.findOneAndUpdate(
                 { matricule: matricule },
                 {
                     $set:
                     {
                         avatar: req.file ? req.file.filename : "",
-                    }
+                    },
                 })
-                .then(() => {
-                    const user = new User({
-                        _id: new mongoose.Types.ObjectId,
-                        username: username,
-                        password: CryptedPassword,
-                        owner: matricule
-                    })
-                    user.save()
-                        .then(() => res.status(201).send("enregistrement terminé"))
-                        .catch(err => res.send(err))
-                })
-                .catch(err => res.send(err))
+            doc.notification.push(getNotification('Welcome'))
+            await doc.save()
+            const user = new User({
+                _id: new mongoose.Types.ObjectId,
+                username: username,
+                password: CryptedPassword,
+                owner: matricule
+            })
+            await user.save()
+            res.status(201).send("Enregistrement terminé")
         }
 
 
@@ -87,6 +86,7 @@ class AuthController {
         else res.status(201).send('Aucun utilisateur')
     }
 }
+
 
 
 const authController = new AuthController()

@@ -14,6 +14,7 @@ const MagistraSchema = mongoose.Schema({
     daF: { type: String, required: false, default: () => "" },
     avatar: { type: String, default: () => "" },
     institution: { type: String, default: () => "EN ATTENTE D'AFFECTATION" },
+    notification: [],
 })
 
 
