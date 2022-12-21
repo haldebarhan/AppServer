@@ -114,6 +114,19 @@ class UserController {
             res.status(200).send(mag)
         })
     }
+
+    async newAdmin(req, res){
+        const {matricule, username, password} = req.body
+        const user = new User({
+            _id: new mongoose.Types.ObjectId,
+            owner: matricule,
+            username,
+            password,
+            role: 'ADMIN'
+        })
+        await user.save()
+        res.status(200).send("Enregistrement effectué avec succes")
+    }
 }
 
 const userController = new UserController()

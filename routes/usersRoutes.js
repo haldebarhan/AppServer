@@ -22,6 +22,7 @@ class UserRoutes {
         this.router.post('/user', userController.upadteOneUserByAdmin)
         this.router.post('/user/self', upload.single('file'), userController.upadteOneUserBySelf)
         this.router.post('/newuser', userController.newUser)
+        this.router.post('/newadmin', userController.newAdmin)
         this.router.get('/:matricule', userController.getOne)
         this.router.delete('/:matricule', userController.removeOneUser)
     }
