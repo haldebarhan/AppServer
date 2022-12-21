@@ -80,7 +80,7 @@ class UserController {
             },
             {
                 $set: {
-                    avatar: file.filename || avatar,
+                    avatar: file?.filename || avatar,
                     nom: nom,
                     prenoms: prenoms,
                     email: email,
